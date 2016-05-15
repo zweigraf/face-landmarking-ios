@@ -27,6 +27,7 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         let input = try! AVCaptureDeviceInput(device: device)
         
         let output = AVCaptureVideoDataOutput()
+        
         output.setSampleBufferDelegate(self, queue: sampleQueue)
     
         let metaOutput = AVCaptureMetadataOutput()
@@ -50,6 +51,9 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         // availableMetadataObjectTypes change when output is added to session.
         // before it is added, availableMetadataObjectTypes is empty
         metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
+        
+        let settings: [NSObject : AnyObject] = [kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA)]
+        output.videoSettings = settings
         
         session.startRunning()
     }

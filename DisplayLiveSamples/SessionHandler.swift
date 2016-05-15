@@ -20,7 +20,6 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     func openSession() {
         let output = AVCaptureVideoDataOutput()
         output.setSampleBufferDelegate(self, queue: sampleQueue)
-        
         let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
         let input = try! AVCaptureDeviceInput(device: device)
         
@@ -33,6 +32,8 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             session.addOutput(output)
         }
         
+        output.connectionWithMediaType(AVMediaTypeVideo).videoOrientation = .Portrait
+        
         session.commitConfiguration()
        
         session.startRunning()
@@ -41,6 +42,6 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
-        print("samplebuffer")
+        layer.enqueueSampleBuffer(sampleBuffer)
     }
 }

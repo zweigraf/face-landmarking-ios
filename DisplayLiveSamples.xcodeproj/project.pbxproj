@@ -427,6 +427,7 @@
 					DLIB_NO_GUI_SUPPORT,
 					NDEBUG,
 					DLIB_USE_BLAS,
+					DLIB_USE_LAPACK,
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/DisplayLiveSamples/lib";
 				INFOPLIST_FILE = DisplayLiveSamples/Info.plist;
@@ -452,6 +453,7 @@
 					DLIB_NO_GUI_SUPPORT,
 					NDEBUG,
 					DLIB_USE_BLAS,
+					DLIB_USE_LAPACK,
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/DisplayLiveSamples/lib";
 				INFOPLIST_FILE = DisplayLiveSamples/Info.plist;

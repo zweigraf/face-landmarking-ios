@@ -38,9 +38,15 @@
     dlib::shape_predictor sp;
     dlib::deserialize(modelFileNameCString) >> sp;
 
+    NSString *imageName = @"left";
+    NSString *imageExtension = @"jpg";
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:imageName ofType:imageExtension];
     
-    std::string filename = "file.jpg";
-    std::string newfilename = filename + ".mod";
+    NSString *newFileName = [NSString stringWithFormat:@"%@-mod.%@", imageName, imageExtension];
+    NSString *newImagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:newFileName];
+    
+    std::string filename = [imagePath UTF8String];
+    std::string newfilename = [newImagePath UTF8String];
     
     dlib::array2d<dlib::rgb_pixel> img;
     load_image(img, filename);

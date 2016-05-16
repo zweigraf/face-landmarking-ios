@@ -23,4 +23,43 @@
     return self;
 }
 
+-(void)doWork {
+    
+    std::string modelFileName = "shape_predictor_68_face_landmarks.dat";
+    
+    // We need a face detector.  We will use this to get bounding boxes for
+    // each face in an image.
+    dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
+    // And we also need a shape_predictor.  This is the tool that will predict face
+    // landmark positions given an image and face bounding box.  Here we are just
+    // loading the model from the shape_predictor_68_face_landmarks.dat file you gave
+    // as a command line argument.
+    dlib::shape_predictor sp;
+    dlib::deserialize(modelFileName) >> sp;
+
+    
+    std::string filename = "file.jpg";
+    std::string newfilename = filename + ".mod";
+    
+    dlib::array2d<dlib::rgb_pixel> img;
+    load_image(img, filename);
+
+    std::vector<dlib::rectangle> dets = detector(img);
+    
+    std::vector<dlib::full_object_detection> shapes;
+    for (unsigned long j = 0; j < dets.size(); ++j)
+    {
+        dlib::full_object_detection shape = sp(img, dets[j]);
+        
+        shapes.push_back(shape);
+        
+        for (unsigned long k = 0; k < shape.num_parts(); k++) {
+            dlib::point p = shape.part(k);
+            draw_solid_circle(img, p, 1.5, dlib::rgb_pixel(0, 0, 255));
+        }
+    }
+    
+    save_jpeg(img, newfilename);
+}
+
 @end

@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     let sessionHandler = SessionHandler()
     
     @IBOutlet weak var preview: UIView!
+    @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +31,23 @@ class ViewController: UIViewController {
         sessionHandler.openSession()
         
 
-        let layer = sessionHandler.layer
-        layer.frame = preview.bounds
+//        let layer = sessionHandler.layer
+//        layer.frame = preview.bounds
+//
+//        preview.layer.addSublayer(layer)
+        
+        
+        let newFileName = "left-mod.jpg"
+        let tmpPath = NSTemporaryDirectory() as NSString
+        let path = tmpPath.stringByAppendingPathComponent(newFileName)
+        
+        let image = UIImage(contentsOfFile: path)
+        
+        imageView.image = image
 
-        preview.layer.addSublayer(layer)
-
+        
         view.layoutIfNeeded()
+
     }
 
 }

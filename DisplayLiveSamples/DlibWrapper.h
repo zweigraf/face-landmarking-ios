@@ -10,4 +10,6 @@
 
 @interface DlibWrapper : NSObject
 
+-(instancetype)init;
+
 @end

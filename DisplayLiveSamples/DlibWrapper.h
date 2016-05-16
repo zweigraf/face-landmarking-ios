@@ -11,5 +11,6 @@
 @interface DlibWrapper : NSObject
 
 -(instancetype)init;
+-(void)doWork;
 
 @end

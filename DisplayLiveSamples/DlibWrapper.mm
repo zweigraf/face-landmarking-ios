@@ -67,6 +67,8 @@
     }
     
     save_jpeg(img, newfilename);
+    
+    NSLog(@"completed work");
 }
 
 @end

@@ -16,6 +16,7 @@
 		A56696101CE8B34B00BD7EAF /* DisplayLiveSamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A566960F1CE8B34B00BD7EAF /* DisplayLiveSamplesUITests.swift */; };
 		A566961E1CE8B4A100BD7EAF /* SessionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A566961D1CE8B4A100BD7EAF /* SessionHandler.swift */; };
 		A5A1B2D21CEA317B00626AC5 /* DlibWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */; };
+		A5A1B2D41CEA35B300626AC5 /* libdlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5A1B2D31CEA35B300626AC5 /* libdlib.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		A5A1B2CF1CEA317B00626AC5 /* DisplayLiveSamples-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DisplayLiveSamples-Bridging-Header.h"; sourceTree = "<group>"; };
 		A5A1B2D01CEA317B00626AC5 /* DlibWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlibWrapper.h; sourceTree = "<group>"; };
 		A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlibWrapper.mm; sourceTree = "<group>"; };
+		A5A1B2D31CEA35B300626AC5 /* libdlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdlib.a; path = DisplayLiveSamples/lib/libdlib.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5A1B2D41CEA35B300626AC5 /* libdlib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +86,7 @@
 		A56695E31CE8B34B00BD7EAF = {
 			isa = PBXGroup;
 			children = (
+				A5A1B2D31CEA35B300626AC5 /* libdlib.a */,
 				A56695EE1CE8B34B00BD7EAF /* DisplayLiveSamples */,
 				A56696031CE8B34B00BD7EAF /* DisplayLiveSamplesTests */,
 				A566960E1CE8B34B00BD7EAF /* DisplayLiveSamplesUITests */,
@@ -414,8 +418,31 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DLIB_PNG_SUPPORT,
+					DLIB_JPEG_SUPPORT,
+					DLIB_USE_BLAS,
+					DLIB_USE_LAPACK,
+					DLIB_NO_GUI_SUPPORT,
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/DisplayLiveSamples/lib";
 				INFOPLIST_FILE = DisplayLiveSamples/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DisplayLiveSamples/lib",
+				);
+				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DDLIB_PNG_SUPPORT",
+					"-DDLIB_JPEG_SUPPORT",
+					"-DDLIB_USE_BLAS",
+					"-DDLIB_USE_LAPACK",
+					"-DDLIB_NO_GUI_SUPPORT",
+					"-DNDEBUG",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DisplayLiveSamples/DisplayLiveSamples-Bridging-Header.h";
@@ -428,8 +455,31 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DLIB_PNG_SUPPORT,
+					DLIB_JPEG_SUPPORT,
+					DLIB_USE_BLAS,
+					DLIB_USE_LAPACK,
+					DLIB_NO_GUI_SUPPORT,
+					NDEBUG,
+				);
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/DisplayLiveSamples/lib";
 				INFOPLIST_FILE = DisplayLiveSamples/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DisplayLiveSamples/lib",
+				);
+				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DDLIB_PNG_SUPPORT",
+					"-DDLIB_JPEG_SUPPORT",
+					"-DDLIB_USE_BLAS",
+					"-DDLIB_USE_LAPACK",
+					"-DDLIB_NO_GUI_SUPPORT",
+					"-DNDEBUG",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DisplayLiveSamples/DisplayLiveSamples-Bridging-Header.h";

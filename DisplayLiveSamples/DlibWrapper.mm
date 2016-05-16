@@ -8,6 +8,10 @@
 
 #import "DlibWrapper.h"
 
+#include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/image_processing.h>
+#include <dlib/image_io.h>
+
 @implementation DlibWrapper
 
 

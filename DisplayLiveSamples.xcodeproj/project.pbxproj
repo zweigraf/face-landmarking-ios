@@ -18,6 +18,7 @@
 		A5A1B2D21CEA317B00626AC5 /* DlibWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */; };
 		A5A1B2D41CEA35B300626AC5 /* libdlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5A1B2D31CEA35B300626AC5 /* libdlib.a */; };
 		A5A1B2D61CEA41E200626AC5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5A1B2D51CEA41E200626AC5 /* Accelerate.framework */; };
+		A5A1B2D81CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = A5A1B2D71CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		A5A1B2D11CEA317B00626AC5 /* DlibWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlibWrapper.mm; sourceTree = "<group>"; };
 		A5A1B2D31CEA35B300626AC5 /* libdlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdlib.a; path = DisplayLiveSamples/lib/libdlib.a; sourceTree = "<group>"; };
 		A5A1B2D51CEA41E200626AC5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		A5A1B2D71CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = shape_predictor_68_face_landmarks.dat; path = DisplayLiveSamples/lib/shape_predictor_68_face_landmarks.dat; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 		A56695E31CE8B34B00BD7EAF = {
 			isa = PBXGroup;
 			children = (
+				A5A1B2D71CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat */,
 				A5A1B2D51CEA41E200626AC5 /* Accelerate.framework */,
 				A5A1B2D31CEA35B300626AC5 /* libdlib.a */,
 				A56695EE1CE8B34B00BD7EAF /* DisplayLiveSamples */,
@@ -250,6 +253,7 @@
 				A56695FA1CE8B34B00BD7EAF /* LaunchScreen.storyboard in Resources */,
 				A56695F71CE8B34B00BD7EAF /* Assets.xcassets in Resources */,
 				A56695F51CE8B34B00BD7EAF /* Main.storyboard in Resources */,
+				A5A1B2D81CEA431600626AC5 /* shape_predictor_68_face_landmarks.dat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

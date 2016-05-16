@@ -433,16 +433,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/DisplayLiveSamples/lib",
 				);
-				OTHER_CFLAGS = "-DNDEBUG";
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"-DDLIB_PNG_SUPPORT",
-					"-DDLIB_JPEG_SUPPORT",
-					"-DDLIB_USE_BLAS",
-					"-DDLIB_USE_LAPACK",
-					"-DDLIB_NO_GUI_SUPPORT",
-					"-DNDEBUG",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DisplayLiveSamples/DisplayLiveSamples-Bridging-Header.h";
@@ -469,16 +459,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DisplayLiveSamples/lib",
-				);
-				OTHER_CFLAGS = "-DNDEBUG";
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"-DDLIB_PNG_SUPPORT",
-					"-DDLIB_JPEG_SUPPORT",
-					"-DDLIB_USE_BLAS",
-					"-DDLIB_USE_LAPACK",
-					"-DDLIB_NO_GUI_SUPPORT",
-					"-DNDEBUG",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";

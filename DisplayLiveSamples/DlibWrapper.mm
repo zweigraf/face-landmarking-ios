@@ -69,13 +69,12 @@
     img.set_size(width, height);
     
     img.reset();
+    long position = 0;
     while (img.move_next()) {
         dlib::bgr_pixel& pixel = img.element();
-        long row = img.nr();
-        long column = img.nc();
-        
+
         // assuming bgra format here
-        long bufferLocation = (row * width + column) * 4;
+        long bufferLocation = position * 4; //(row * width + column) * 4;
         char b = baseBuffer[bufferLocation];
         char g = baseBuffer[bufferLocation + 1];
         char r = baseBuffer[bufferLocation + 2];
@@ -84,7 +83,10 @@
         
         dlib::bgr_pixel newpixel(b, g, r);
         pixel = newpixel;
+        
+        position++;
     }
+    
     
     CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
 
@@ -95,7 +97,7 @@
     std::string newfilename = [newImagePath UTF8String];
 
     dlib::save_jpeg(img, newfilename);
-    NSLog(@"Completed Work on File %@", newImagePath);
+    NSLog(@"Completed Work with Position %ld on File %@", position, newImagePath);
 }
 
 @end

@@ -13,7 +13,6 @@ class ViewController: UIViewController {
     let sessionHandler = SessionHandler()
     
     @IBOutlet weak var preview: UIView!
-    @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -55,38 +55,47 @@
     if (!self.prepared) {
         [self prepare];
     }
+    
+    dlib::array2d<dlib::bgr_pixel> img;
+    
+    // MARK: magic
+    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    CVPixelBufferLockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
 
-    NSString *imageName = @"left";
-    NSString *imageExtension = @"jpg";
-    NSString *imagePath = [[NSBundle mainBundle] pathForResource:imageName ofType:imageExtension];
+    size_t width = CVPixelBufferGetWidth(imageBuffer);
+    size_t height = CVPixelBufferGetHeight(imageBuffer);
+    char *baseBuffer = (char *)CVPixelBufferGetBaseAddress(imageBuffer);
     
-    NSString *newFileName = [NSString stringWithFormat:@"%@-mod.%@", imageName, imageExtension];
-    NSString *newImagePath = [NSTemporaryDirectory() stringByAppendingPathComponent:newFileName];
+    img.set_size(width, height);
     
-    std::string filename = [imagePath UTF8String];
-    std::string newfilename = [newImagePath UTF8String];
-    
-    dlib::array2d<dlib::rgb_pixel> img;
-    load_image(img, filename);
-
-    std::vector<dlib::rectangle> dets = detector(img);
-    
-    std::vector<dlib::full_object_detection> shapes;
-    for (unsigned long j = 0; j < dets.size(); ++j)
-    {
-        dlib::full_object_detection shape = sp(img, dets[j]);
+    img.reset();
+    while (img.move_next()) {
+        dlib::bgr_pixel& pixel = img.element();
+        long row = img.nr();
+        long column = img.nc();
         
-        shapes.push_back(shape);
+        // assuming bgra format here
+        long bufferLocation = (row * width + column) * 4;
+        char b = baseBuffer[bufferLocation];
+        char g = baseBuffer[bufferLocation + 1];
+        char r = baseBuffer[bufferLocation + 2];
+        //        we do not need this
+        //        char a = baseBuffer[bufferLocation + 3];
         
-        for (unsigned long k = 0; k < shape.num_parts(); k++) {
-            dlib::point p = shape.part(k);
-            draw_solid_circle(img, p, 1.5, dlib::rgb_pixel(0, 0, 255));
-        }
+        dlib::bgr_pixel newpixel(b, g, r);
+        pixel = newpixel;
     }
     
-    save_jpeg(img, newfilename);
+    CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
+
+    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+    NSString *newImagePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"processedImage-%f.jpg", time]];
     
-    NSLog(@"completed work");
+    std::string newfilename = [newImagePath UTF8String];
+
+    dlib::save_jpeg(img, newfilename);
+    NSLog(@"Completed Work on File %@", newImagePath);
 }
 
 @end

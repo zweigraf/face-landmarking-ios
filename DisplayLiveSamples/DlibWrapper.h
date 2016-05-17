@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreMedia/CoreMedia.h>
 
 @interface DlibWrapper : NSObject
 
 -(instancetype)init;
--(void)doWork;
+-(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer;
 
 @end

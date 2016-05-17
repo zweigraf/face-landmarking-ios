@@ -12,31 +12,49 @@
 #include <dlib/image_processing.h>
 #include <dlib/image_io.h>
 
-@implementation DlibWrapper
+@interface DlibWrapper ()
+
+@property (assign) BOOL prepared;
+
+- (void)prepare;
+
+@end
+@implementation DlibWrapper {
+    dlib::frontal_face_detector detector;
+    dlib::shape_predictor sp;
+}
 
 
 -(instancetype)init {
     self = [super init];
     if (self) {
-        
+        _prepared = NO;
     }
     return self;
 }
 
--(void)doWork {
-    
+- (void)prepare {
     NSString *modelFileName = [[NSBundle mainBundle] pathForResource:@"shape_predictor_68_face_landmarks" ofType:@"dat"];
     std::string modelFileNameCString = [modelFileName UTF8String];
     
     // We need a face detector.  We will use this to get bounding boxes for
     // each face in an image.
-    dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
+    detector = dlib::get_frontal_face_detector();
     // And we also need a shape_predictor.  This is the tool that will predict face
     // landmark positions given an image and face bounding box.  Here we are just
     // loading the model from the shape_predictor_68_face_landmarks.dat file you gave
     // as a command line argument.
-    dlib::shape_predictor sp;
     dlib::deserialize(modelFileNameCString) >> sp;
+    
+    // FIXME: test this stuff for memory leaks (cpp object destruction)
+    self.prepared = YES;
+}
+
+-(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+    
+    if (!self.prepared) {
+        [self prepare];
+    }
 
     NSString *imageName = @"left";
     NSString *imageExtension = @"jpg";

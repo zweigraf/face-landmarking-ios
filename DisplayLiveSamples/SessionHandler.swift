@@ -13,6 +13,8 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
     let layer = AVSampleBufferDisplayLayer()
     let sampleQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.sampleQueue", DISPATCH_QUEUE_SERIAL)
     let faceQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.faceQueue", DISPATCH_QUEUE_SERIAL)
+    let wrapper = DlibWrapper()
+    
     
     override init() {
         super.init()
@@ -55,15 +57,14 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         let settings: [NSObject : AnyObject] = [kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA)]
         output.videoSettings = settings
         
-//        session.startRunning()
+        session.startRunning()
         
-        let wrapper = DlibWrapper()
-        wrapper.doWork()
     }
     
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
+        wrapper.doWorkOnSampleBuffer(sampleBuffer)
         layer.enqueueSampleBuffer(sampleBuffer)
     }
     

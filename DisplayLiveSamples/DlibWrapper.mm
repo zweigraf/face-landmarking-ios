@@ -66,7 +66,8 @@
     size_t height = CVPixelBufferGetHeight(imageBuffer);
     char *baseBuffer = (char *)CVPixelBufferGetBaseAddress(imageBuffer);
     
-    img.set_size(width, height);
+    // set_size expects rows, cols format
+    img.set_size(height, width);
     
     img.reset();
     long position = 0;

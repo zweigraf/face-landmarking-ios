@@ -56,6 +56,8 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         
         let settings: [NSObject : AnyObject] = [kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA)]
         output.videoSettings = settings
+    
+        wrapper.prepare()
         
         session.startRunning()
         

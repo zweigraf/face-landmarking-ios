@@ -16,8 +16,6 @@
 
 @property (assign) BOOL prepared;
 
-- (void)prepare;
-
 @end
 @implementation DlibWrapper {
     dlib::frontal_face_detector detector;

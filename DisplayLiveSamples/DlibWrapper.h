@@ -11,7 +11,8 @@
 
 @interface DlibWrapper : NSObject
 
--(instancetype)init;
--(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+- (instancetype)init;
+- (void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+- (void)prepare;
 
 @end

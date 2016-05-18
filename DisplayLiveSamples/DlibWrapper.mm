@@ -86,16 +86,31 @@
         position++;
     }
     
-    
+    // unlock buffer again until we need it again
     CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
 
+    std::vector<dlib::rectangle> dets = detector(img);
+    
+    for (unsigned long j = 0; j < dets.size(); ++j)
+    {
+        dlib::full_object_detection shape = sp(img, dets[j]);
+        
+        for (unsigned long k = 0; k < shape.num_parts(); k++) {
+            dlib::point p = shape.part(k);
+            draw_solid_circle(img, p, 1.5, dlib::rgb_pixel(0, 0, 255));
+            NSLog(@"i detected a shape with %lu parts", shape.num_parts());
+        }
+    }
+    
+    
     NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
     NSString *newImagePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"processedImage-%f.jpg", time]];
     
     std::string newfilename = [newImagePath UTF8String];
-
+    
     dlib::save_jpeg(img, newfilename);
+    
     NSLog(@"Completed Work with Position %ld on File %@", position, newImagePath);
 }
 

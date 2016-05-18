@@ -8,13 +8,12 @@
 
 import AVFoundation
 
-class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate {
+class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     var session = AVCaptureSession()
     let layer = AVSampleBufferDisplayLayer()
     let sampleQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.sampleQueue", DISPATCH_QUEUE_SERIAL)
     let faceQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.faceQueue", DISPATCH_QUEUE_SERIAL)
     let wrapper = DlibWrapper()
-    
     
     override init() {
         super.init()
@@ -32,10 +31,6 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         
         output.setSampleBufferDelegate(self, queue: sampleQueue)
     
-        let metaOutput = AVCaptureMetadataOutput()
-        metaOutput.setMetadataObjectsDelegate(self, queue: faceQueue)
-        
-        
         session.beginConfiguration()
         
         if session.canAddInput(input) {
@@ -44,15 +39,8 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         if session.canAddOutput(output) {
             session.addOutput(output)
         }
-        if session.canAddOutput(metaOutput) {
-            session.addOutput(metaOutput)
-        }
         
         session.commitConfiguration()
-       
-        // availableMetadataObjectTypes change when output is added to session.
-        // before it is added, availableMetadataObjectTypes is empty
-        metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
         
         let settings: [NSObject : AnyObject] = [kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA)]
         output.videoSettings = settings
@@ -60,19 +48,11 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         wrapper.prepare()
         
         session.startRunning()
-        
     }
-    
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
-        self.wrapper.doWorkOnSampleBuffer(sampleBuffer)
+        wrapper.doWorkOnSampleBuffer(sampleBuffer)
         layer.enqueueSampleBuffer(sampleBuffer)
-    }
-    
-    // MARK: AVCaptureMetadataOutputObjectsDelegate
-    
-    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
-        print(metadataObjects)
     }
 }

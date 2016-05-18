@@ -35,13 +35,7 @@
     NSString *modelFileName = [[NSBundle mainBundle] pathForResource:@"shape_predictor_68_face_landmarks" ofType:@"dat"];
     std::string modelFileNameCString = [modelFileName UTF8String];
     
-    // We need a face detector.  We will use this to get bounding boxes for
-    // each face in an image.
     detector = dlib::get_frontal_face_detector();
-    // And we also need a shape_predictor.  This is the tool that will predict face
-    // landmark positions given an image and face bounding box.  Here we are just
-    // loading the model from the shape_predictor_68_face_landmarks.dat file you gave
-    // as a command line argument.
     dlib::deserialize(modelFileNameCString) >> sp;
     
     // FIXME: test this stuff for memory leaks (cpp object destruction)

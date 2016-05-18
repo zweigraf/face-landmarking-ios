@@ -66,7 +66,7 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
-        wrapper.doWorkOnSampleBuffer(sampleBuffer)
+        self.wrapper.doWorkOnSampleBuffer(sampleBuffer)
         layer.enqueueSampleBuffer(sampleBuffer)
     }
     

@@ -97,21 +97,29 @@
         
         for (unsigned long k = 0; k < shape.num_parts(); k++) {
             dlib::point p = shape.part(k);
-            draw_solid_circle(img, p, 1.5, dlib::rgb_pixel(0, 0, 255));
-            NSLog(@"i detected a shape with %lu parts", shape.num_parts());
+            draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
         }
     }
     
+    // lets put everything back where it belongs
+    CVPixelBufferLockBaseAddress(imageBuffer, 0);
     
-    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
-    NSString *newImagePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"processedImage-%f.jpg", time]];
-    
-    std::string newfilename = [newImagePath UTF8String];
-    
-    dlib::save_jpeg(img, newfilename);
-    
-    NSLog(@"Completed Work with Position %ld on File %@", position, newImagePath);
+    img.reset();
+    position = 0;
+    while (img.move_next()) {
+        dlib::bgr_pixel& pixel = img.element();
+        
+        // assuming bgra format here
+        long bufferLocation = position * 4; //(row * width + column) * 4;
+        baseBuffer[bufferLocation] = pixel.blue;
+        baseBuffer[bufferLocation + 1] = pixel.green;
+        baseBuffer[bufferLocation + 2] = pixel.red;
+        //        we do not need this
+        //        char a = baseBuffer[bufferLocation + 3];
+        
+        position++;
+    }
+    CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
 }
 
 @end

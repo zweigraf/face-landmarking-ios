@@ -4,6 +4,9 @@ This prototype shows basic face landmark recognition on a ```CMSampleBuffer``` (
 
 Frame rate is really bad as I am sure there are some performance improvements to be made. Currently, the buffers are copied around a lot.
 
+## Screenshot
+
+![screenshot](screenshot.png)
 
 ## Credits
 

@@ -66,8 +66,11 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
         
         if !currentMetadata.isEmpty {
-            let face = currentMetadata.first as! AVMetadataFaceObject
-            wrapper.doWorkOnSampleBuffer(sampleBuffer, inRect: face.bounds)
+            let boundsArray = currentMetadata
+                .flatMap { $0 as? AVMetadataFaceObject }
+                .map { NSValue(CGRect: $0.bounds) }
+            
+            wrapper.doWorkOnSampleBuffer(sampleBuffer, inRects: boundsArray)
         }
 
         layer.enqueueSampleBuffer(sampleBuffer)

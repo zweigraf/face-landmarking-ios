@@ -64,7 +64,12 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
-        wrapper.doWorkOnSampleBuffer(sampleBuffer)
+        
+        if !currentMetadata.isEmpty {
+            let face = currentMetadata.first as! AVMetadataFaceObject
+            wrapper.doWorkOnSampleBuffer(sampleBuffer, inRect: face.bounds)
+        }
+
         layer.enqueueSampleBuffer(sampleBuffer)
     }
     

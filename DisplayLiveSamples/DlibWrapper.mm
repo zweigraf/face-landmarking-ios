@@ -8,17 +8,16 @@
 
 #import "DlibWrapper.h"
 
-#include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing.h>
 #include <dlib/image_io.h>
 
 @interface DlibWrapper ()
 
 @property (assign) BOOL prepared;
++ (dlib::rectangle)convertScaleCGRect:(CGRect)rect toDlibRectacleWithImageSize:(CGSize)size;
 
 @end
 @implementation DlibWrapper {
-    dlib::frontal_face_detector detector;
     dlib::shape_predictor sp;
 }
 
@@ -35,14 +34,13 @@
     NSString *modelFileName = [[NSBundle mainBundle] pathForResource:@"shape_predictor_68_face_landmarks" ofType:@"dat"];
     std::string modelFileNameCString = [modelFileName UTF8String];
     
-    detector = dlib::get_frontal_face_detector();
     dlib::deserialize(modelFileNameCString) >> sp;
     
     // FIXME: test this stuff for memory leaks (cpp object destruction)
     self.prepared = YES;
 }
 
--(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+-(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRect:(CGRect)rect {
     
     if (!self.prepared) {
         [self prepare];
@@ -83,16 +81,12 @@
     // unlock buffer again until we need it again
     CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
 
-    std::vector<dlib::rectangle> dets = detector(img);
+    dlib::rectangle convertedRectangle = [DlibWrapper convertScaleCGRect:rect toDlibRectacleWithImageSize:CGSizeMake(width, height)];
+    dlib::full_object_detection shape = sp(img, convertedRectangle);
     
-    for (unsigned long j = 0; j < dets.size(); ++j)
-    {
-        dlib::full_object_detection shape = sp(img, dets[j]);
-        
-        for (unsigned long k = 0; k < shape.num_parts(); k++) {
-            dlib::point p = shape.part(k);
-            draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
-        }
+    for (unsigned long k = 0; k < shape.num_parts(); k++) {
+        dlib::point p = shape.part(k);
+        draw_solid_circle(img, p, 3, dlib::rgb_pixel(0, 255, 255));
     }
     
     // lets put everything back where it belongs
@@ -114,6 +108,16 @@
         position++;
     }
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+}
+
++ (dlib::rectangle)convertScaleCGRect:(CGRect)rect toDlibRectacleWithImageSize:(CGSize)size {
+    long left = rect.origin.x * size.width;
+    long top = rect.origin.y * size.height;
+    long right = (rect.origin.x + rect.size.width) * size.width;
+    long bottom = (rect.origin.y + rect.size.height) * size.height;
+    
+    dlib::rectangle dlibRect(left, top, right, bottom);
+    return dlibRect;
 }
 
 @end

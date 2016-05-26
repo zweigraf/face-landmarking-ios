@@ -12,7 +12,7 @@
 @interface DlibWrapper : NSObject
 
 - (instancetype)init;
-- (void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+- (void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRect:(CGRect)rect;
 - (void)prepare;
 
 @end

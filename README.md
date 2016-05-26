@@ -2,7 +2,9 @@
 
 This prototype shows basic face landmark recognition on a ```CMSampleBuffer``` (see ```DlibWrapper.mm```) coming out of an ```AVCaptureSession```.
 
-Frame rate is really bad as I am sure there are some performance improvements to be made. Currently, the buffers are copied around a lot.
+Frame rate is actually quite good on an iPhone 6S now that we are using the system face detection via ```AVCaptureMetadataOutput```.
+
+But I am sure there are a lot more performance improvements to be made. Currently, the buffers are copied around a lot.
 
 ## Screenshot
 

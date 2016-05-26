@@ -8,14 +8,17 @@
 
 import AVFoundation
 
-class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate {
     var session = AVCaptureSession()
     let layer = AVSampleBufferDisplayLayer()
     let sampleQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.sampleQueue", DISPATCH_QUEUE_SERIAL)
     let faceQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.faceQueue", DISPATCH_QUEUE_SERIAL)
     let wrapper = DlibWrapper()
     
+    var currentMetadata: [AnyObject]
+    
     override init() {
+        currentMetadata = []
         super.init()
     }
     
@@ -28,8 +31,10 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         let input = try! AVCaptureDeviceInput(device: device)
         
         let output = AVCaptureVideoDataOutput()
-        
         output.setSampleBufferDelegate(self, queue: sampleQueue)
+        
+        let metaOutput = AVCaptureMetadataOutput()
+        metaOutput.setMetadataObjectsDelegate(self, queue: faceQueue)
     
         session.beginConfiguration()
         
@@ -39,12 +44,19 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         if session.canAddOutput(output) {
             session.addOutput(output)
         }
+        if session.canAddOutput(metaOutput) {
+            session.addOutput(metaOutput)
+        }
         
         session.commitConfiguration()
         
         let settings: [NSObject : AnyObject] = [kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA)]
         output.videoSettings = settings
     
+        // availableMetadataObjectTypes change when output is added to session.
+        // before it is added, availableMetadataObjectTypes is empty
+        metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
+        
         wrapper.prepare()
         
         session.startRunning()
@@ -52,7 +64,25 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
-        wrapper.doWorkOnSampleBuffer(sampleBuffer)
+        
+        if !currentMetadata.isEmpty {
+            let boundsArray = currentMetadata
+                .flatMap { $0 as? AVMetadataFaceObject }
+                .map { NSValue(CGRect: $0.bounds) }
+            
+            wrapper.doWorkOnSampleBuffer(sampleBuffer, inRects: boundsArray)
+        }
+
         layer.enqueueSampleBuffer(sampleBuffer)
+    }
+    
+    func captureOutput(captureOutput: AVCaptureOutput!, didDropSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
+        print("DidDropSampleBuffer")
+    }
+    
+    // MARK: AVCaptureMetadataOutputObjectsDelegate
+    
+    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
+        currentMetadata = metadataObjects
     }
 }

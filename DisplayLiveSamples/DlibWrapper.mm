@@ -16,7 +16,7 @@
 
 @property (assign) BOOL prepared;
 
-+ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects toVectorWithImageSize:(CGSize)size;
++ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects;
 
 @end
 @implementation DlibWrapper {
@@ -83,11 +83,9 @@
     
     // unlock buffer again until we need it again
     CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
-
-    CGSize imageSize = CGSizeMake(width, height);
     
     // convert the face bounds list to dlib format
-    std::vector<dlib::rectangle> convertedRectangles = [DlibWrapper convertCGRectValueArray:rects toVectorWithImageSize:imageSize];
+    std::vector<dlib::rectangle> convertedRectangles = [DlibWrapper convertCGRectValueArray:rects];
     
     // for every detected face
     for (unsigned long j = 0; j < convertedRectangles.size(); ++j)
@@ -126,7 +124,7 @@
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
 }
 
-+ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects toVectorWithImageSize:(CGSize)size {
++ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects {
     std::vector<dlib::rectangle> myConvertedRects;
     for (NSValue *rectValue in rects) {
         CGRect rect = [rectValue CGRectValue];

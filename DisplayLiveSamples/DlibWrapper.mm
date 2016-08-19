@@ -34,13 +34,16 @@
 }
 
 - (void)prepare {
-    NSString *modelFileName = [[NSBundle mainBundle] pathForResource:@"shape_predictor_68_face_landmarks" ofType:@"dat"];
-    std::string modelFileNameCString = [modelFileName UTF8String];
-    
-    dlib::deserialize(modelFileNameCString) >> sp;
-    
-    // FIXME: test this stuff for memory leaks (cpp object destruction)
-    self.prepared = YES;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *modelFileName = [[NSBundle mainBundle] pathForResource:@"shape_predictor_68_face_landmarks" ofType:@"dat"];
+        std::string modelFileNameCString = [modelFileName UTF8String];
+
+        dlib::deserialize(modelFileNameCString) >> sp;
+
+        // FIXME: test this stuff for memory leaks (cpp object destruction)
+        self.prepared = YES;
+    });
 }
 
 -(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRects:(NSArray<NSValue *> *)rects {

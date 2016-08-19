@@ -68,7 +68,10 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         if !currentMetadata.isEmpty {
             let boundsArray = currentMetadata
                 .flatMap { $0 as? AVMetadataFaceObject }
-                .map { NSValue(CGRect: $0.bounds) }
+                .map { (faceObject) -> NSValue in
+                    let convertedObject = captureOutput.transformedMetadataObjectForMetadataObject(faceObject, connection: connection)
+                    return NSValue(CGRect: convertedObject.bounds)
+            }
             
             wrapper.doWorkOnSampleBuffer(sampleBuffer, inRects: boundsArray)
         }

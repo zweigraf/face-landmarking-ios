@@ -127,21 +127,16 @@
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
 }
 
-+ (dlib::rectangle)convertScaleCGRect:(CGRect)rect toDlibRectacleWithImageSize:(CGSize)size {
-    long left = rect.origin.x * size.width;
-    long top = rect.origin.y * size.height;
-    long right = (rect.origin.x + rect.size.width) * size.width;
-    long bottom = (rect.origin.y + rect.size.height) * size.height;
-    
-    dlib::rectangle dlibRect(left, top, right, bottom);
-    return dlibRect;
-}
-
 + (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects toVectorWithImageSize:(CGSize)size {
     std::vector<dlib::rectangle> myConvertedRects;
     for (NSValue *rectValue in rects) {
-        CGRect singleRect = [rectValue CGRectValue];
-        dlib::rectangle dlibRect = [DlibWrapper convertScaleCGRect:singleRect toDlibRectacleWithImageSize:size];
+        CGRect rect = [rectValue CGRectValue];
+        long left = rect.origin.x;
+        long top = rect.origin.y;
+        long right = left + rect.size.width;
+        long bottom = top + rect.size.height;
+        dlib::rectangle dlibRect(left, top, right, bottom);
+
         myConvertedRects.push_back(dlibRect);
     }
     return myConvertedRects;

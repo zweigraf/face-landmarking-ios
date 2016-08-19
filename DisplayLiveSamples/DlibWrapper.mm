@@ -41,7 +41,6 @@
 
         dlib::deserialize(modelFileNameCString) >> sp;
 
-        // FIXME: test this stuff for memory leaks (cpp object destruction)
         self.prepared = YES;
     });
 }

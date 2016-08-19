@@ -16,7 +16,6 @@
 
 @property (assign) BOOL prepared;
 
-+ (dlib::rectangle)convertScaleCGRect:(CGRect)rect toDlibRectacleWithImageSize:(CGSize)size;
 + (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects toVectorWithImageSize:(CGSize)size;
 
 @end
@@ -25,7 +24,7 @@
 }
 
 
--(instancetype)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         _prepared = NO;
@@ -43,7 +42,7 @@
     self.prepared = YES;
 }
 
--(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRects:(NSArray<NSValue *> *)rects {
+- (void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRects:(NSArray<NSValue *> *)rects {
     
     if (!self.prepared) {
         [self prepare];

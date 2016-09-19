@@ -16,8 +16,7 @@
 
 @property (assign) BOOL prepared;
 
-+ (dlib::rectangle)convertScaleCGRect:(CGRect)rect toDlibRectacleWithImageSize:(CGSize)size;
-+ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects toVectorWithImageSize:(CGSize)size;
++ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects;
 
 @end
 @implementation DlibWrapper {
@@ -25,7 +24,7 @@
 }
 
 
--(instancetype)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         _prepared = NO;
@@ -43,7 +42,7 @@
     self.prepared = YES;
 }
 
--(void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRects:(NSArray<NSValue *> *)rects {
+- (void)doWorkOnSampleBuffer:(CMSampleBufferRef)sampleBuffer inRects:(NSArray<NSValue *> *)rects {
     
     if (!self.prepared) {
         [self prepare];
@@ -84,11 +83,9 @@
     
     // unlock buffer again until we need it again
     CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
-
-    CGSize imageSize = CGSizeMake(width, height);
     
     // convert the face bounds list to dlib format
-    std::vector<dlib::rectangle> convertedRectangles = [DlibWrapper convertCGRectValueArray:rects toVectorWithImageSize:imageSize];
+    std::vector<dlib::rectangle> convertedRectangles = [DlibWrapper convertCGRectValueArray:rects];
     
     // for every detected face
     for (unsigned long j = 0; j < convertedRectangles.size(); ++j)
@@ -127,21 +124,16 @@
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
 }
 
-+ (dlib::rectangle)convertScaleCGRect:(CGRect)rect toDlibRectacleWithImageSize:(CGSize)size {
-    long left = rect.origin.x * size.width;
-    long top = rect.origin.y * size.height;
-    long right = (rect.origin.x + rect.size.width) * size.width;
-    long bottom = (rect.origin.y + rect.size.height) * size.height;
-    
-    dlib::rectangle dlibRect(left, top, right, bottom);
-    return dlibRect;
-}
-
-+ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects toVectorWithImageSize:(CGSize)size {
++ (std::vector<dlib::rectangle>)convertCGRectValueArray:(NSArray<NSValue *> *)rects {
     std::vector<dlib::rectangle> myConvertedRects;
     for (NSValue *rectValue in rects) {
-        CGRect singleRect = [rectValue CGRectValue];
-        dlib::rectangle dlibRect = [DlibWrapper convertScaleCGRect:singleRect toDlibRectacleWithImageSize:size];
+        CGRect rect = [rectValue CGRectValue];
+        long left = rect.origin.x;
+        long top = rect.origin.y;
+        long right = left + rect.size.width;
+        long bottom = top + rect.size.height;
+        dlib::rectangle dlibRect(left, top, right, bottom);
+
         myConvertedRects.push_back(dlibRect);
     }
     return myConvertedRects;

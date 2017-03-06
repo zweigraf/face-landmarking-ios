@@ -11,8 +11,8 @@ import AVFoundation
 class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureMetadataOutputObjectsDelegate {
     var session = AVCaptureSession()
     let layer = AVSampleBufferDisplayLayer()
-    let sampleQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.sampleQueue", DISPATCH_QUEUE_SERIAL)
-    let faceQueue = dispatch_queue_create("com.zweigraf.DisplayLiveSamples.faceQueue", DISPATCH_QUEUE_SERIAL)
+    let sampleQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.sampleQueue", attributes: [])
+    let faceQueue = DispatchQueue(label: "com.zweigraf.DisplayLiveSamples.faceQueue", attributes: [])
     let wrapper = DlibWrapper()
     
     var currentMetadata: [AnyObject]
@@ -23,9 +23,9 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
     }
     
     func openSession() {
-        let device = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo)
+        let device = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
             .map { $0 as! AVCaptureDevice }
-            .filter { $0.position == .Front}
+            .filter { $0.position == .front}
             .first!
         
         let input = try! AVCaptureDeviceInput(device: device)
@@ -50,42 +50,42 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         
         session.commitConfiguration()
         
-        let settings: [NSObject : AnyObject] = [kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA)]
+        let settings: [AnyHashable: Any] = [kCVPixelBufferPixelFormatTypeKey as AnyHashable: Int(kCVPixelFormatType_32BGRA)]
         output.videoSettings = settings
     
         // availableMetadataObjectTypes change when output is added to session.
         // before it is added, availableMetadataObjectTypes is empty
         metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
         
-        wrapper.prepare()
+        wrapper?.prepare()
         
         session.startRunning()
     }
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
-    func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         
         if !currentMetadata.isEmpty {
             let boundsArray = currentMetadata
                 .flatMap { $0 as? AVMetadataFaceObject }
                 .map { (faceObject) -> NSValue in
-                    let convertedObject = captureOutput.transformedMetadataObjectForMetadataObject(faceObject, connection: connection)
-                    return NSValue(CGRect: convertedObject.bounds)
+                    let convertedObject = captureOutput.transformedMetadataObject(for: faceObject, connection: connection)
+                    return NSValue(cgRect: convertedObject!.bounds)
             }
             
-            wrapper.doWorkOnSampleBuffer(sampleBuffer, inRects: boundsArray)
+            wrapper?.doWork(on: sampleBuffer, inRects: boundsArray)
         }
 
-        layer.enqueueSampleBuffer(sampleBuffer)
+        layer.enqueue(sampleBuffer)
     }
     
-    func captureOutput(captureOutput: AVCaptureOutput!, didDropSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         print("DidDropSampleBuffer")
     }
     
     // MARK: AVCaptureMetadataOutputObjectsDelegate
     
-    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
-        currentMetadata = metadataObjects
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+        currentMetadata = metadataObjects as [AnyObject]
     }
 }

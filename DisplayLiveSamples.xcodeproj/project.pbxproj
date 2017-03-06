@@ -214,13 +214,19 @@
 				TargetAttributes = {
 					A56695EB1CE8B34B00BD7EAF = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = W7YDEDGW4E;
+						LastSwiftMigration = 0820;
 					};
 					A56695FF1CE8B34B00BD7EAF = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = W7YDEDGW4E;
+						LastSwiftMigration = 0820;
 						TestTargetID = A56695EB1CE8B34B00BD7EAF;
 					};
 					A566960A1CE8B34B00BD7EAF = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = W7YDEDGW4E;
+						LastSwiftMigration = 0820;
 						TestTargetID = A56695EB1CE8B34B00BD7EAF;
 					};
 				};
@@ -426,6 +432,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = W7YDEDGW4E;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DLIB_JPEG_SUPPORT,
 					DLIB_NO_GUI_SUPPORT,
@@ -444,6 +451,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DisplayLiveSamples/DisplayLiveSamples-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -452,6 +460,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = W7YDEDGW4E;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DLIB_JPEG_SUPPORT,
 					DLIB_NO_GUI_SUPPORT,
@@ -469,6 +478,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DisplayLiveSamples/DisplayLiveSamples-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -476,10 +486,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = W7YDEDGW4E;
 				INFOPLIST_FILE = DisplayLiveSamplesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamplesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DisplayLiveSamples.app/DisplayLiveSamples";
 			};
 			name = Debug;
@@ -488,10 +500,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = W7YDEDGW4E;
 				INFOPLIST_FILE = DisplayLiveSamplesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamplesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DisplayLiveSamples.app/DisplayLiveSamples";
 			};
 			name = Release;
@@ -499,10 +513,12 @@
 		A566961B1CE8B34B00BD7EAF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = W7YDEDGW4E;
 				INFOPLIST_FILE = DisplayLiveSamplesUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamplesUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = DisplayLiveSamples;
 			};
 			name = Debug;
@@ -510,10 +526,12 @@
 		A566961C1CE8B34B00BD7EAF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = W7YDEDGW4E;
 				INFOPLIST_FILE = DisplayLiveSamplesUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zweigraf.DisplayLiveSamplesUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = DisplayLiveSamples;
 			};
 			name = Release;

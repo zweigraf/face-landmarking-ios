@@ -23,8 +23,8 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
     }
     
     func openSession() {
-        let device = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
-            .map { $0 as! AVCaptureDevice }
+        let device = AVCaptureDevice.devices(for: AVMediaType.video)
+            .map { $0 }
             .filter { $0.position == .front}
             .first!
         
@@ -51,11 +51,11 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         session.commitConfiguration()
         
         let settings: [AnyHashable: Any] = [kCVPixelBufferPixelFormatTypeKey as AnyHashable: Int(kCVPixelFormatType_32BGRA)]
-        output.videoSettings = settings
+        output.videoSettings = settings as! [String : Any]
     
         // availableMetadataObjectTypes change when output is added to session.
         // before it is added, availableMetadataObjectTypes is empty
-        metaOutput.metadataObjectTypes = [AVMetadataObjectTypeFace]
+        metaOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.face]
         
         wrapper?.prepare()
         
@@ -63,13 +63,13 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
     }
     
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
-        
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+
         if !currentMetadata.isEmpty {
             let boundsArray = currentMetadata
                 .flatMap { $0 as? AVMetadataFaceObject }
                 .map { (faceObject) -> NSValue in
-                    let convertedObject = captureOutput.transformedMetadataObject(for: faceObject, connection: connection)
+                    let convertedObject = output.transformedMetadataObject(for: faceObject, connection: connection)
                     return NSValue(cgRect: convertedObject!.bounds)
             }
             
@@ -79,13 +79,13 @@ class SessionHandler : NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, A
         layer.enqueue(sampleBuffer)
     }
     
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+    func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         print("DidDropSampleBuffer")
     }
     
     // MARK: AVCaptureMetadataOutputObjectsDelegate
     
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         currentMetadata = metadataObjects as [AnyObject]
     }
 }
